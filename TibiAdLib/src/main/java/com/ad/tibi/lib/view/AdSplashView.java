@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -19,12 +20,16 @@ import com.ad.tibi.lib.interf.PermissionListener;
 import com.ad.tibi.lib.interf.TimeListener;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.DensityUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 //import com.bumptech.glide.Glide;
 //import com.bumptech.glide.load.DataSource;
 //import com.bumptech.glide.load.engine.GlideException;
 //import com.bumptech.glide.request.RequestListener;
 //import com.bumptech.glide.request.target.Target;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 

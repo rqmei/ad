@@ -21,6 +21,12 @@ public class ImageAd {
     ImageAdEntity vo;
     ImageAdInterface event;
     
+    public ImageAd(Context context,ImageAdEntity vo,ImageAdInterface event){
+        this.context = context;
+        this.vo = vo;
+        this.event = event;
+    }
+    
     public View getView() {
         if(vo == null){
             return  null;
