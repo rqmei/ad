@@ -12,7 +12,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Map<String, String> gdtIdMap = new HashMap<String, String>();
-        gdtIdMap.put(AdConst.AD_SPLASH, "5070550501041614");
+        gdtIdMap.put(AdConst.AD_SPLASH, "d61e1a3621ae1f91d8c80fb2e499dc50");
         gdtIdMap.put(AdConst.AD_INTER, "4061006419774284");
         gdtIdMap.put(AdConst.AD_FLOW_INDEX, "6041707449579237");
         gdtIdMap.put(AdConst.AD_TIEPIAN_LIVE, "3031506499071361");

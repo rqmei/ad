@@ -1,55 +1,63 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ad.tibi.lib" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ad.tibi.lib">
+    <!--minSdkVersion为9时的合并-->
+    <uses-sdk tools:overrideLibrary="android.support.v7.appcompat, android.support.v7.recyclerview,
+    com.dingmouren.layoutmanagergroup,com.zyyoona7.lib, com.squareup.leakcanary,
+     com.squareup.leakcanary.analyzer, com.squareup.leakcanary.android.noop,com.mopub.mobileads.base,
+     com.mopub.mobileads.rewarded_video, com.mopub.mobileads.banner,com.mopub.mobileads.interstitial,
+     com.moat.analytics.mobile.mpub,com.google.android.ads.mediationtestsuite" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
+
     <application>
-
         <!--
             百度
         -->
-        <activity android:name="com.baidu.mobads.AppActivity"
+        <activity
+            android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <provider android:name="com.baidu.mobads.openad.FileProvider"
+        <provider
+            android:name="com.baidu.mobads.openad.FileProvider"
             android:authorities="${applicationId}.bd.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/bd_file_paths"/>
+                android:resource="@xml/bd_file_paths" />
         </provider>
 
-        <!--
-            腾讯 广点通
-        -->
+        <!--腾讯优量汇START-->
+
         <service
             android:name="com.qq.e.comm.DownloadService"
-            android:exported="false"/>
+            android:exported="false" />
+        <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
         <activity
             android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
         <activity
             android:name="com.qq.e.ads.PortraitADActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.qq.e.ads.LandscapeADActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
-        <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities
-        属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值 -->
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -57,9 +65,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/gdt_file_path"/>
+                android:resource="@xml/gdt_file_path" />
         </provider>
-
+        <!--腾讯优量汇END-->
         <!--
             穿山甲，一个传染两，那可怎么办，赶紧用"亮甲"
         -->
@@ -70,13 +78,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/csj_file_paths"/>
+                android:resource="@xml/csj_file_paths" />
         </provider>
 
         <provider
             android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
             android:authorities="${applicationId}.TTMultiProvider"
-            android:exported="false"/>
+            android:exported="false" />
 
     </application>
 </manifest>

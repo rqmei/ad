@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AdvertView">
+        <!--        是否显示计时时间-->
+        <attr name="ad_time_show" format="boolean" />
+        <!--        是否显示计时-->
+        <attr name="ad_time_view_show" format="boolean" />
+        <!--        整体背景-->
+        <attr name="ad_time_bg" format="color" />
+        <!--        中间文字的颜色-->
+        <attr name="ad_time_text_color" format="color" />
+        <!--        中间文字的大小-->
+        <attr name="ad_time_text_size" format="dimension" />
+        <!--        时间进度的颜色-->
+        <attr name="ad_time_pro_color" format="color" />
+        <!--        时间进度的宽度-->
+        <attr name="ad_time_pro_width" format="dimension" />
+        <!--        时间数值-->
+        <attr name="ad_time_num" format="integer" />
+        <!--        圆形半径-->
+        <attr name="ad_time_radius" format="dimension" />
+        <!--        loading的颜色-->
+        <attr name="ad_loading_color" format="color" />
+        <!--        loading的半径-->
+        <attr name="ad_loading_radius" format="dimension" />
+        <!--        loading的宽度-->
+        <attr name="ad_loading_width" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CountDownView">
+        <!--        整体背景-->
+        <attr name="time_circle_bg" format="color" />
+        <!--        中间文字的颜色-->
+        <attr name="time_text_color" format="color" />
+        <!--        中间文字的大小-->
+        <attr name="time_text_size" format="dimension" />
+        <!--        时间进度的颜色-->
+        <attr name="time_pro_color" format="color" />
+        <!--        时间进度的宽度-->
+        <attr name="time_pro_width" format="dimension" />
+        <!--        时间数值-->
+        <attr name="time_num" format="integer" />
+        <!--        圆形半径-->
+        <attr name="time_radius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="LoadingView">
+        <!--        loading的颜色-->
+        <attr name="loading_color" format="color" />
+        <!--        loading的半径-->
+        <attr name="loading_radius" format="dimension" />
+        <!--        loading的宽度-->
+        <attr name="loading_width" format="dimension" />
+    </declare-styleable>
+</resources>

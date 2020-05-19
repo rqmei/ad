@@ -1,10 +1,6 @@
 package com.ad.tibi.lib.helper.splash;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +8,7 @@ import android.widget.TextView;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.R;
+import com.ad.tibi.lib.interf.AdListenerSplashFull;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.AdRandomUtil;
 import com.ad.tibi.lib.util.UIUtils;
@@ -66,6 +63,10 @@ public class TibiAdSplash {
             case AdNameType.CSJ:
                 showAdFullCsj(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                 break;
+//            case AdNameType.TB:
+//                // 替比
+//                showAdFullTb(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
+//                break;
             default:
                 if (stop) {
                     return;
@@ -74,74 +75,81 @@ public class TibiAdSplash {
                 adListener.onAdFailed(activity.getString(R.string.all_ad_error));
         }
     }
+
     /**
      * 腾讯广点通
-     * @param activity
-     * @param splashConfigStr
-     * @param adConstStr
-     * @param adsParentLayout
-     * @param skipView
-     * @param timeView
-     * @param adListener
+     *
+     * @param activity        展示广告的activity
+     * @param splashConfigStr 广告类型
+     * @param adConstStr      广告位id
+     * @param adsParentLayout 展示广告的大容器
+     * @param skipView        自定义的跳过按钮：传入该view给SDK后，SDK会自动给它绑定点击跳过事件。
+     *                        SkipView的样式可以由开发者自由定制，其尺寸限制请参考activity_splash.xml或者接入文档中的说明。
+     * @param timeView        倒计时view
+     * @param adListener      广告状态监听器
      */
     private void showAdFullGDT(final Activity activity, final String splashConfigStr, final String adConstStr,
                                final ViewGroup adsParentLayout, final View skipView, final TextView timeView,
                                final AdListenerSplashFull adListener) {
         adListener.onStartRequest(AdNameType.GDT);
         AdInit adInit = AdInit.getSingleAdInit();
-        SplashAD splash = new SplashAD(activity, skipView, adInit.getAppIdGDT(),
-                adInit.getIdMapGDT().get(adConstStr), new SplashADListener() {
-            @Override
-            public void onADDismissed() {
-                if (adListener != null) {
-                    adListener.onAdDismissed();
-                }
-            }
+        SplashAD splash = new SplashAD(activity, skipView, adInit.getIdMapGDT().get(adConstStr),
+                new SplashADListener() {
+                    @Override
+                    public void onADDismissed() {
+                        if (adListener != null) {
+                            adListener.onAdDismissed();
+                        }
+                    }
 
-            @Override
-            public void onNoAD(AdError adError) {
-                if (stop) {
-                    return;
-                }
-                cancelTimerTask();
-                String newSplashConfigStr = splashConfigStr.replace(AdNameType.GDT, AdNameType.NO);
-                showAdFull(activity, newSplashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
-            }
+                    @Override
+                    public void onNoAD(AdError adError) {
+                        if (stop) {
+                            return;
+                        }
+                        cancelTimerTask();
+                        String newSplashConfigStr = splashConfigStr.replace(AdNameType.GDT, AdNameType.NO);
+                        showAdFull(activity, newSplashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
+                    }
 
-            @Override
-            public void onADPresent() {
-                if (stop) {
-                    return;
-                }
-                skipView.setVisibility(View.VISIBLE);
-                cancelTimerTask();
-                if (adListener != null) {
-                    adListener.onAdPrepared(AdNameType.GDT);
-                }
-            }
+                    @Override
+                    public void onADPresent() {
+                        if (stop) {
+                            return;
+                        }
+                        skipView.setVisibility(View.VISIBLE);
+                        cancelTimerTask();
+                        if (adListener != null) {
+                            adListener.onAdPrepared(AdNameType.GDT);
+                        }
+                    }
 
-            @Override
-            public void onADClicked() {
-                if (adListener != null) {
-                    adListener.onAdClick(AdNameType.GDT);
-                }
-            }
+                    @Override
+                    public void onADClicked() {
+                        if (adListener != null) {
+                            adListener.onAdClick(AdNameType.GDT);
+                        }
+                    }
 
-            @Override
-            public void onADTick(long l) {
-                timeView.setText(String.valueOf((l / 1000 + 1)));
-            }
+                    /**
+                     * 倒计时回调，返回广告还将被展示的剩余时间。
+                     * @param l 剩余毫秒数
+                     */
+                    @Override
+                    public void onADTick(long l) {
+                        timeView.setText(String.valueOf((l / 1000 + 1)));
+                    }
 
-            @Override
-            public void onADExposure() {
+                    @Override
+                    public void onADExposure() {
 
-            }
+                    }
 
-            @Override
-            public void onADLoaded(long l) {
+                    @Override
+                    public void onADLoaded(long l) {
 
-            }
-        }, 0);
+                    }
+                }, 0);
 
         splash.fetchAndShowIn(adsParentLayout);
     }
@@ -296,42 +304,33 @@ public class TibiAdSplash {
     }
 
     /**
-     * 监听器
+     * 显示替比原生
      */
-    public interface AdListenerSplashFull {
-        /**
-         * 开始请求广告之前
-         *
-         * @param var1
-         */
-        void onStartRequest(String var1);
+    public void showAdFullTb(final Activity activity, final String splashConfigStr, final String adConstStr,
+                             final ViewGroup adsParentLayout, final View skipView, final TextView timeView,
+                             final AdListenerSplashFull adListener) {
+//        TibiAdHttp.getAdInfo("https://students.safe-new.tb.com/home", new OnSuccessCallback<String>() {
+//            @Override
+//            public void success(String result) {
+//                Log.i("showAdFullTb", "result=" + result);
+//                // 请求替比广告成功
+//                AdSplashView adSplashView = new AdSplashView(activity);
+//                adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
+//                adSplashView.setAdvertListener(adListener);
+//            }
+//        }, new OnErrorCallback() {
+//            @Override
+//            public void error(Exception exception) {
+//                exception.printStackTrace();
+//                Log.i("showAdFullTb", "result=" + exception.getMessage());
+//                // 请求替比广告失败，加载第三方广告
+//                showAdFullTb(activity, splashConfigStr, adConstStr, adsParentLayout,
+//                        skipView, timeView, adListener);
+//            }
+//        });
 
-        /**
-         * 广告被点击之后
-         *
-         * @param var1
-         */
-        void onAdClick(String var1);
-
-        /**
-         * 广告加载失败
-         *
-         * @param var1
-         */
-        void onAdFailed(String var1);
-
-        /**
-         * 广告倒计时结束 消失
-         */
-        void onAdDismissed();
-
-        /**
-         * 广告请求成功，准备展示
-         *
-         * @param var1
-         */
-        void onAdPrepared(String var1);
     }
+
 
     /**
      * 取消超时任务

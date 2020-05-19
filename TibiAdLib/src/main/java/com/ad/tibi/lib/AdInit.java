@@ -4,10 +4,10 @@ import android.app.Application;
 import android.util.Log;
 
 import com.ad.tibi.lib.util.AdNameType;
-import com.baidu.mobads.AdView;
 import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
+import com.qq.e.comm.managers.GDTADManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,20 +57,13 @@ public class AdInit {
     /**
      * 初始化广告
      */
-    //baidu
-    public void initBaiduAd(Application context, String baiduAdAppId,
-                            Map<String, String> baiduIdMap) {
-        mContext = context;
-        AdView.setAppSid(context, baiduAdAppId);
-        idMapBaidu = baiduIdMap;
-        Log.i("AdInit", "初始化：" + AdNameType.BAIDU);
-    }
 
     //广点通
     public void initGDTAd(Application context, String gdtAdAppId, Map<String, String> gdtIdMap) {
         mContext = context;
         idMapGDT = gdtIdMap;
         appIdGDT = gdtAdAppId;
+        GDTADManager.getInstance().initWith(context, gdtAdAppId);
         Log.i("AdInit", "初始化：" + AdNameType.GDT);
     }
 
@@ -90,7 +83,7 @@ public class AdInit {
                 .debug(BuildConfig.DEBUG) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
                 .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI) //允许直接下载的网络状态集合
                 .supportMultiProcess(false) //是否支持多进程，true支持
-                //.httpStack(new MyOkStack3())//自定义网络库，demo中给出了okhttp3版本的样例，其余请自行开发或者咨询工作人员。
+//                .httpStack(new MyOkStack3())//自定义网络库，demo中给出了okhttp3版本的样例，其余请自行开发或者咨询工作人员。
                 .build()
         );
         Log.i("AdInit", "初始化：" + AdNameType.CSJ);

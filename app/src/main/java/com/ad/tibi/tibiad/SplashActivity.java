@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.helper.splash.TibiAdSplash;
+import com.ad.tibi.lib.interf.AdListenerSplashFull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +28,11 @@ public class SplashActivity extends AppCompatActivity {
     TextView tvSkip;
     @BindView(R.id.skip_view)
     RelativeLayout skipView;
-    private boolean canJumpImmediately = false;
+    /**
+     * 是否能跳转
+     */
+    private boolean canJump = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,27 +44,38 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (canJumpImmediately) {
-            actionHome(0);
+        if (canJump) {
+            next(0);
         }
-        canJumpImmediately = true;
+        canJump = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        canJumpImmediately = false;
+        canJump = false;
+    }
+
+    /**
+     * 开屏页一定要禁止用户对返回按钮的控制，否则将可能导致用户手动退出了App而广告无法正常曝光和计费
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void requestAd() {
         String splashConfigAd = "baidu:0,gdt:1,csj:1";
-        TibiAdSplash.getSingleAdSplash().showAdFull(
+        TibiAdSplash.getSingleAdSplash().showAdFullTb(
                 this,
                 splashConfigAd,
                 AdInit.getSingleAdInit().getIdMapCsj().get(AdConst.AD_SPLASH),
                 mFlAdContainer,
-                null,null,
-                new TibiAdSplash.AdListenerSplashFull() {
+                skipView, tvTime,
+                new AdListenerSplashFull() {
                     @Override
                     public void onStartRequest(String var1) {
                         Log.e("ifmvo", "onStartRequest:channel:$channel");
@@ -72,15 +89,15 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onAdFailed(String var1) {
                         Log.e("ifmvo", "onAdFailed:failedMsg:$failedMsg");
-                        actionHome(0);
+                        next(0);
                     }
 
                     @Override
                     public void onAdDismissed() {
-                        if (canJumpImmediately) {
-                            actionHome(0);
+                        if (canJump) {
+                            next(0);
                         }
-                        canJumpImmediately = true;
+                        canJump = true;
                     }
 
                     @Override
@@ -90,8 +107,13 @@ public class SplashActivity extends AppCompatActivity {
 
                 });
     }
-    private void actionHome(long delayMillis){
-        startActivity(new Intent(SplashActivity.this,MainActivity.class));
-        finish();
+
+    private void next(long delayMillis) {
+        if(canJump) {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            finish();
+        } else {
+            canJump = true;
+        }
     }
 }
