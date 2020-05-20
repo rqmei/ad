@@ -3,6 +3,7 @@ package com.ad.tibi.lib;
 import android.app.Application;
 import android.util.Log;
 
+import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.util.AdNameType;
 import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
@@ -42,7 +43,10 @@ public class AdInit {
      * 前贴
      */
     private int preMoivePaddingSize = 0;
-
+    /**
+     * 广告信息
+     */
+    private ImageAdEntity imageAdEntity;
     public static AdInit getSingleAdInit() {
         if (singleAdInit == null) {
             synchronized (AdInit.class) { // 避免不必要的同步
@@ -121,4 +125,12 @@ public class AdInit {
     public void setAppIdGDT(String appIdGDT) {
         this.appIdGDT = appIdGDT;
     }
+    public ImageAdEntity getImageAdEntity() {
+        return imageAdEntity;
+    }
+
+    public void setImageAdEntity(ImageAdEntity imageAdEntity) {
+        this.imageAdEntity = imageAdEntity;
+    }
+
 }

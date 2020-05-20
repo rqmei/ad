@@ -3,6 +3,8 @@ package com.ad.tibi.tibiad;
 import android.app.Application;
 
 import com.ad.tibi.lib.AdInit;
+import com.ad.tibi.lib.http.TibiAdHttp;
+import com.zhouyou.http.EasyHttp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        TibiAdHttp.initEasyHttp(this);
         Map<String, String> gdtIdMap = new HashMap<String, String>();
         gdtIdMap.put(AdConst.AD_SPLASH, "d61e1a3621ae1f91d8c80fb2e499dc50");
         gdtIdMap.put(AdConst.AD_INTER, "4061006419774284");

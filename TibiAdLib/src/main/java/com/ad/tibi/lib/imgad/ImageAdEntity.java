@@ -1,12 +1,14 @@
 package com.ad.tibi.lib.imgad;
 
+import java.io.Serializable;
+
 /**
  * ImageAdEntity
  * -----------------------------------------------------------------------------------------------------------------------------------
  *
  * @author yelian on 2020/5/19
  */
-public class ImageAdEntity {
+public class ImageAdEntity implements Serializable {
     
     private int width;
     
@@ -14,11 +16,13 @@ public class ImageAdEntity {
     /**
      * 图片路径
      */
-    private String url;
+    private String url = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec" +
+            "=1589947868797&di=c900e4daf896c2eabffdaf9bd84a501a&imgtype=0&src=http%3A%2F%2Fa3" +
+            ".att.hudong.com%2F61%2F98%2F01300000248068123885985729957.jpg";
     /**
      * 跳转路径
      */
-    private String jumpPath;
+    private String jumpPath = "http://www.baidu.com";
     /**
      * 下载路径
      */
@@ -27,6 +31,7 @@ public class ImageAdEntity {
      * 预留字段，后期可能做视频
      */
     private int type;
+
 
 
     public int getWidth() {

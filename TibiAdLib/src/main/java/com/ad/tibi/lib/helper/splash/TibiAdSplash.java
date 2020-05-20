@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.R;
 import com.ad.tibi.lib.http.TibiAdHttp;
+import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.interf.AdListenerSplashFull;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.AdRandomUtil;
@@ -20,11 +21,11 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
-import com.liwy.easyhttp.callback.OnErrorCallback;
-import com.liwy.easyhttp.callback.OnSuccessCallback;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
+import com.zhouyou.http.callback.CallBack;
+import com.zhouyou.http.exception.ApiException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -313,33 +314,50 @@ public class TibiAdSplash {
     public void showAdFullTb(final Activity activity, final String splashConfigStr, final String adConstStr,
                              final ViewGroup adsParentLayout, final View skipView, final TextView timeView,
                              final AdListenerSplashFull adListener) {
-        TibiAdHttp.getAdInfo("https://students.safe-new.tb.com/home", new OnSuccessCallback<String>() {
+        TibiAdHttp.getAdInfo("user/account/base/info", new CallBack<ImageAdEntity>() {
             @Override
-            public void success(String result) {
-                Log.i("showAdFullTb", "result=" + result);
-                // 请求替比广告成功
-                AdSplashView adSplashView = new AdSplashView(activity);
-                adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
-                adSplashView.setAdvertListener(adListener);
+            public void onStart() {
+
             }
-        }, new OnErrorCallback() {
+
             @Override
-            public void error(Exception exception) {
-                exception.printStackTrace();
-                Log.i("showAdFullTb", "result=" + exception.getMessage());
+            public void onCompleted() {
+                Log.i("showAdFullTb", "onCompleted =");
+            }
+
+            @Override
+            public void onError(ApiException e) {
+                Log.i("showAdFullTb", "onError =" + e.getDisplayMessage());
                 // 请求替比广告失败，加载第三方广告
-                showAdFullTb(activity, splashConfigStr, adConstStr, adsParentLayout,
+                showAdFull(activity, splashConfigStr, adConstStr, adsParentLayout,
                         skipView, timeView, adListener);
             }
-        });
 
+            @Override
+            public void onSuccess(ImageAdEntity imageAdEntity) {
+                Log.i("showAdFullTb", "result=" + imageAdEntity);
+                imageAdEntity = new ImageAdEntity();
+                // 请求替比广告成功
+                skipView.setVisibility(View.GONE);
+                // 设置广告view
+                AdSplashView adSplashView = new AdSplashView(activity);
+                adSplashView.setTime_show(true);
+                adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
+                adSplashView.setAdvertListener(adListener);
+                //设置当前广告信息
+                AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
+                // 加入广告
+                adsParentLayout.removeAllViews();
+                adsParentLayout.addView(adSplashView);
+            }
+        });
     }
 
 
     /**
      * 取消超时任务
      */
-    private void cancelTimerTask(){
+    private void cancelTimerTask() {
         stop = false;
         if (timer != null) {
             timer.cancel();

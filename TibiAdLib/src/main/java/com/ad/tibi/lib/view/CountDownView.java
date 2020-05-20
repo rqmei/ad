@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.os.Message;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.ad.tibi.lib.R;
@@ -100,6 +101,7 @@ public class CountDownView extends View {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            Log.i("dealTime", "handler==" + msg.what);
             switch (msg.what) {
                 case SHOW_TIME_VIEW:
                     dealAngle();
@@ -115,6 +117,7 @@ public class CountDownView extends View {
     };
 
     public void setShowTime(boolean showTime) {
+        Log.i("setShowTime", "showTime=" + showTime);
         this.showTime = showTime;
     }
 
@@ -266,6 +269,7 @@ public class CountDownView extends View {
      * 显示view  开始
      */
     public void showStartTime() {
+        Log.i("showStartTime", "showTime==" + showTime);
         if (handler != null) {
             if (showTime) {
                 handler.sendEmptyMessage(SHOW_TIME);
@@ -327,6 +331,7 @@ public class CountDownView extends View {
      *
      */
     private void dealTime() {
+        Log.i("dealTime", "content==" + content);
         content = (totalTime / 1000) + "s";
         if (totalTime == 0) {
             return;

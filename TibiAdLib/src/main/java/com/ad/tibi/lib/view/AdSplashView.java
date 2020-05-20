@@ -15,21 +15,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.ad.tibi.lib.R;
+import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.interf.AdListenerSplashFull;
 import com.ad.tibi.lib.interf.PermissionListener;
 import com.ad.tibi.lib.interf.TimeListener;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.DensityUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-//import com.bumptech.glide.Glide;
-//import com.bumptech.glide.load.DataSource;
-//import com.bumptech.glide.load.engine.GlideException;
-//import com.bumptech.glide.request.RequestListener;
-//import com.bumptech.glide.request.target.Target;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,9 +64,11 @@ public class AdSplashView extends FrameLayout {
 
     private AdListenerSplashFull advertListener;
 
+
     public void setAdvertListener(AdListenerSplashFull advertListener) {
         this.advertListener = advertListener;
     }
+
 
     public AdSplashView(Context context) {
         this(context, null);
@@ -222,6 +220,7 @@ public class AdSplashView extends FrameLayout {
 
     /**
      * 设置广告图片
+     *
      * @param bitmap
      */
     public void setImage(Bitmap bitmap) {
@@ -234,33 +233,34 @@ public class AdSplashView extends FrameLayout {
 
     /**
      * 设置广告图片
+     *
      * @param httpUrl 图片网络路径
      */
     public void setImage(String httpUrl) {
         if (imageView != null) {
             imageView.setVisibility(VISIBLE);
-//            Glide.with(mContext).load(httpUrl).listener(new RequestListener<Drawable>() {
-//                @Override
-//                public boolean onLoadFailed(GlideException e, Object model,
-//                                            Target<Drawable> target, boolean isFirstResource) {
-//                    // 图片加载完成
-//                    if (advertListener != null) {
-//                        advertListener.onAdPrepared(AdNameType.TB);
-//                    }
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(Drawable resource, Object model,
-//                                               Target<Drawable> target, DataSource dataSource,
-//                                               boolean isFirstResource) {
-//                    // 图片加载完成
-//                    if (advertListener != null) {
-//                        advertListener.onAdFailed(AdNameType.TB);
-//                    }
-//                    return false;
-//                }
-//            }).into(imageView);
+            Glide.with(mContext).load(httpUrl).listener(new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target,
+                                           boolean isFirstResource) {
+                    // 图片加载失败
+                    if (advertListener != null) {
+                        advertListener.onAdFailed(AdNameType.TB);
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model,
+                                               Target<GlideDrawable> target, boolean isFromMemoryCache,
+                                               boolean isFirstResource) {
+                    // 图片加载完成
+                    if (advertListener != null) {
+                        advertListener.onAdPrepared(AdNameType.TB);
+                    }
+                    return false;
+                }
+            }).into(imageView);
         }
         startTime();
     }

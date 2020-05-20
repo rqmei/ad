@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.helper.splash.TibiAdSplash;
+import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.interf.AdListenerSplashFull;
 
 import butterknife.BindView;
@@ -83,7 +84,10 @@ public class SplashActivity extends AppCompatActivity {
 
                     @Override
                     public void onAdClick(String var1) {
-                        Log.e("ifmvo", "onAdClick:channel:$channel");
+                        ImageAdEntity imageAdEntity = AdInit.getSingleAdInit().getImageAdEntity();
+                        Log.e("onAdClick", "onAdClick:"+var1+",paht="+imageAdEntity.getJumpPath());
+                        // 点击
+                        Log.e("onAdClick", "onAdClick:"+imageAdEntity.toString());
                     }
 
                     @Override
