@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.ad.tibi.lib.R;
-import com.ad.tibi.lib.helper.splash.interf.TimeListener;
+import com.ad.tibi.lib.helper.splash.inter.TimeListener;
 import com.ad.tibi.lib.util.DensityUtils;
 
 

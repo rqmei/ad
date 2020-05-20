@@ -1,4 +1,4 @@
-package com.ad.tibi.lib.helper.splash.interf;
+package com.ad.tibi.lib.helper.splash.inter;
 
 /**
  * 闪屏广告回调工具类

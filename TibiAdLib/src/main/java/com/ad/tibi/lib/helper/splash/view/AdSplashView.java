@@ -14,16 +14,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.ad.tibi.lib.R;
-import com.ad.tibi.lib.helper.splash.interf.AdListenerSplashFull;
-import com.ad.tibi.lib.helper.splash.interf.PermissionListener;
-import com.ad.tibi.lib.helper.splash.interf.TimeListener;
+import com.ad.tibi.lib.helper.splash.inter.AdListenerSplashFull;
+import com.ad.tibi.lib.helper.splash.inter.PermissionListener;
+import com.ad.tibi.lib.helper.splash.inter.TimeListener;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.DensityUtils;
 import com.ad.tibi.lib.util.ImageLoadUtil;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;

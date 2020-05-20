@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.helper.inter.TibiAdInter;
-import com.ad.tibi.lib.helper.splash.interf.AdListenerSplashFull;
+import com.ad.tibi.lib.helper.splash.inter.AdListenerSplashFull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

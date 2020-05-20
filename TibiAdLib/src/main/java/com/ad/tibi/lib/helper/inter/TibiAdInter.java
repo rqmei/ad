@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.R;
-import com.ad.tibi.lib.helper.splash.interf.AdListenerSplashFull;
-import com.ad.tibi.lib.helper.splash.view.AdSplashView;
+import com.ad.tibi.lib.helper.splash.inter.AdListenerSplashFull;
 import com.ad.tibi.lib.http.TibiAdHttp;
 import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.util.AdNameType;
