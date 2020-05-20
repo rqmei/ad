@@ -13,6 +13,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 必须初始化
         TibiAdHttp.initEasyHttp(this);
         Map<String, String> gdtIdMap = new HashMap<String, String>();
         gdtIdMap.put(AdConst.AD_SPLASH, "d61e1a3621ae1f91d8c80fb2e499dc50");

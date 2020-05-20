@@ -37,7 +37,7 @@ public class AdInit {
     /**
      * 超时时间
      */
-    private long timeOutMillis;
+    private long timeOutMillis = 5000;
 
     /**
      * 前贴
@@ -47,6 +47,7 @@ public class AdInit {
      * 广告信息
      */
     private ImageAdEntity imageAdEntity;
+
     public static AdInit getSingleAdInit() {
         if (singleAdInit == null) {
             synchronized (AdInit.class) { // 避免不必要的同步
@@ -78,17 +79,17 @@ public class AdInit {
         idMapCsj = csjIdMap;
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
         TTAdSdk.init(context, new TTAdConfig.Builder()
-                .appId(csjAdAppId)
-                .appName(appName)
-                .useTextureView(useTextureView) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
-                .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
-                .allowShowNotify(true) //是否允许sdk展示通知栏提示
-                .allowShowPageWhenScreenLock(true) //是否在锁屏场景支持展示广告落地页
-                .debug(BuildConfig.DEBUG) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
-                .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI) //允许直接下载的网络状态集合
-                .supportMultiProcess(false) //是否支持多进程，true支持
+                        .appId(csjAdAppId)
+                        .appName(appName)
+                        .useTextureView(useTextureView) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
+                        .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
+                        .allowShowNotify(true) //是否允许sdk展示通知栏提示
+                        .allowShowPageWhenScreenLock(true) //是否在锁屏场景支持展示广告落地页
+                        .debug(BuildConfig.DEBUG) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
+                        .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI) //允许直接下载的网络状态集合
+                        .supportMultiProcess(false) //是否支持多进程，true支持
 //                .httpStack(new MyOkStack3())//自定义网络库，demo中给出了okhttp3版本的样例，其余请自行开发或者咨询工作人员。
-                .build()
+                        .build()
         );
         Log.i("AdInit", "初始化：" + AdNameType.CSJ);
     }
@@ -125,6 +126,7 @@ public class AdInit {
     public void setAppIdGDT(String appIdGDT) {
         this.appIdGDT = appIdGDT;
     }
+
     public ImageAdEntity getImageAdEntity() {
         return imageAdEntity;
     }

@@ -34,6 +34,9 @@ public class TibiAdSplash {
     static TibiAdSplash adSplash;
     private Timer timer = null;
     private TimerTask overTimerTask = null;
+    /**
+     * 是否停止广告加载
+     */
     private boolean stop = false;
 
     public static TibiAdSplash getSingleAdSplash() {
@@ -57,21 +60,20 @@ public class TibiAdSplash {
     public void showAdFull(Activity activity, String splashConfigStr, String adConstStr
             , ViewGroup adsParentLayout, View skipView, TextView timeView, AdListenerSplashFull adListener) {
         stop = false;
-        startTimerTask(adListener);
-        switch (AdRandomUtil.getRandomAdName(splashConfigStr)) {
-            case AdNameType.BAIDU:
-//                showAdFullBaiduMob(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
-                break;
+        // 广告类型
+        String adType = AdRandomUtil.getRandomAdName(splashConfigStr);
+        startTimerTask(adListener, adType);
+        switch (adType) {
             case AdNameType.GDT:
                 showAdFullGDT(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                 break;
             case AdNameType.CSJ:
                 showAdFullCsj(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                 break;
-//            case AdNameType.TB:
-//                // 替比
-//                showAdFullTb(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
-//                break;
+            case AdNameType.TB:
+                // 替比
+                showAdFullTb(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
+                break;
             default:
                 if (stop) {
                     return;
@@ -370,10 +372,10 @@ public class TibiAdSplash {
     /**
      * 开始超时任务
      */
-    private void startTimerTask(AdListenerSplashFull listener) {
+    private void startTimerTask(AdListenerSplashFull listener, String adNameType) {
         cancelTimerTask();
         timer = new Timer();
-        overTimerTask = new OverTimerTask(listener);
+        overTimerTask = new OverTimerTask(listener, adNameType);
         if (timer != null) {
             timer.schedule(overTimerTask, AdInit.getSingleAdInit().getTimeOutMillis());
         }
@@ -384,15 +386,18 @@ public class TibiAdSplash {
      */
     private class OverTimerTask extends TimerTask {
         private AdListenerSplashFull weakReference;
+        String adType;
 
         public void run() {
+            stop = true;
             if (this.weakReference != null) {
-                this.weakReference.onAdFailed(AdNameType.CSJ);
+                this.weakReference.onAdFailed(adType);
             }
         }
 
-        public OverTimerTask(AdListenerSplashFull listener) {
+        public OverTimerTask(AdListenerSplashFull listener, String adNameType) {
             super();
+            this.adType = adNameType;
             if (listener != null) {
                 this.weakReference = listener;
             }
