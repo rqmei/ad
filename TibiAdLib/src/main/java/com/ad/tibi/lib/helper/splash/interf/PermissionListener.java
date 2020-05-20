@@ -1,4 +1,4 @@
-package com.ad.tibi.lib.interf;
+package com.ad.tibi.lib.helper.splash.interf;
 
 import java.util.List;
 

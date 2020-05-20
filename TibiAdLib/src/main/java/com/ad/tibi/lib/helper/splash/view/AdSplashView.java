@@ -1,4 +1,4 @@
-package com.ad.tibi.lib.view;
+package com.ad.tibi.lib.helper.splash.view;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -15,10 +14,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.ad.tibi.lib.R;
-import com.ad.tibi.lib.imgad.ImageAdEntity;
-import com.ad.tibi.lib.interf.AdListenerSplashFull;
-import com.ad.tibi.lib.interf.PermissionListener;
-import com.ad.tibi.lib.interf.TimeListener;
+import com.ad.tibi.lib.helper.splash.interf.AdListenerSplashFull;
+import com.ad.tibi.lib.helper.splash.interf.PermissionListener;
+import com.ad.tibi.lib.helper.splash.interf.TimeListener;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.DensityUtils;
 import com.bumptech.glide.Glide;

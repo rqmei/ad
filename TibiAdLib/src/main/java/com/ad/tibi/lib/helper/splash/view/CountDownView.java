@@ -1,4 +1,4 @@
-package com.ad.tibi.lib.view;
+package com.ad.tibi.lib.helper.splash.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.ad.tibi.lib.R;
-import com.ad.tibi.lib.interf.TimeListener;
+import com.ad.tibi.lib.helper.splash.interf.TimeListener;
 import com.ad.tibi.lib.util.DensityUtils;
 
 

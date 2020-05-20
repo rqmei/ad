@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.R;
+import com.ad.tibi.lib.helper.splash.interf.AdListenerSplashFull;
+import com.ad.tibi.lib.helper.splash.view.AdSplashView;
 import com.ad.tibi.lib.http.TibiAdHttp;
 import com.ad.tibi.lib.imgad.ImageAdEntity;
-import com.ad.tibi.lib.interf.AdListenerSplashFull;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.AdRandomUtil;
 import com.ad.tibi.lib.util.UIUtils;
-import com.ad.tibi.lib.view.AdSplashView;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;

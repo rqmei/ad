@@ -1,4 +1,4 @@
-package com.ad.tibi.lib.interf;
+package com.ad.tibi.lib.helper.splash.interf;
 
 /**
  * 倒计时涉及的接口回掉

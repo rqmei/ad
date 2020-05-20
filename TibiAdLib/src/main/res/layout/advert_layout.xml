@@ -10,7 +10,7 @@
         android:scaleType="centerCrop"
         android:visibility="gone" />
 
-    <com.ad.tibi.lib.view.CountDownView
+    <com.ad.tibi.lib.helper.splash.view.CountDownView
         android:id="@+id/cd_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.helper.splash.TibiAdSplash;
 import com.ad.tibi.lib.imgad.ImageAdEntity;
-import com.ad.tibi.lib.interf.AdListenerSplashFull;
+import com.ad.tibi.lib.helper.splash.interf.AdListenerSplashFull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
