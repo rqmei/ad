@@ -53,7 +53,7 @@ public class TibiAdSplash {
     /**
      * 显示开屏广告
      *
-     * @param splashConfigStr "baidu:2,gdt:8"
+     * @param splashConfigStr 可随机选择的广告类型 "csj:2,gdt:8,tb:1"
      * @param adsParentLayout 容器
      * @param adListener      监听
      */

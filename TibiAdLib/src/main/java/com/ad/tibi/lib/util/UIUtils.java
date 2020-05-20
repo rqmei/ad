@@ -35,7 +35,20 @@ public class UIUtils {
         }
         return height;
     }
-
+    /**
+     * 广告插屏的宽度
+     * @param context
+     * @return
+     */
+    public static int getAdWidth (Activity context) {
+        float expressViewWidth = getScreenWidthDp(context);
+        float expressViewHeight = getHeight(context);
+        //图片以16：9的宽高比展示
+        //无论是横屏还是竖屏都是取小的那个长度的80%
+        double width = expressViewWidth > expressViewHeight ? expressViewHeight : (expressViewWidth * 0.8);
+        int n = (int) width;
+        return n;
+    }
     public static void hideBottomUIMenu(Activity activity) {
         if (activity == null) {
             return;

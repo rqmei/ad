@@ -28,10 +28,10 @@ public class App extends Application {
 
         Map<String, String> csjIdMap = new HashMap<String, String>();
         csjIdMap.put(AdConst.AD_SPLASH, "887324838");
-        csjIdMap.put(AdConst.AD_INTER, "920413056");
+        csjIdMap.put(AdConst.AD_INTER, "945185697");
         csjIdMap.put(AdConst.AD_FLOW_INDEX, "920413297");
         csjIdMap.put(AdConst.AD_TIEPIAN_LIVE, "920413238");
-        csjIdMap.put(AdConst.AD_WEBVIEW_BANNER, "920413358");
+        csjIdMap.put(AdConst.AD_WEBVIEW_BANNER, "945186019");
         csjIdMap.put(AdConst.AD_BACK, "920413512");
         csjIdMap.put(AdConst.AD_MID, "920413056");
         AdInit.getSingleAdInit().initCsjAd(this, "5066244",
