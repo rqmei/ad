@@ -205,7 +205,7 @@ public class TibiAdInter {
 
     public void showAdInterTb(final Activity activity, final String interConfigStr, final String adConstStr,
                               final AdListenerSplashFull adListener) {
-        TibiAdHttp.getAdInfo("user/account/base/info", new CallBack<ImageAdEntity>() {
+        TibiAdHttp.getAdInfo("my/current/notice", new CallBack<ImageAdEntity>() {
             @Override
             public void onStart() {
 
@@ -213,19 +213,19 @@ public class TibiAdInter {
 
             @Override
             public void onCompleted() {
-                Log.i("showAdFullTb", "onCompleted =");
+                Log.i("showAdInterTb", "onCompleted =");
             }
 
             @Override
             public void onError(ApiException e) {
-                Log.i("showAdFullTb", "onError =" + e.getDisplayMessage());
+                Log.i("showAdInterTb", "onError =" + e.getDisplayMessage());
                 // 请求替比广告失败，加载第三方广告
-                showAdInterTb(activity, interConfigStr, adConstStr, adListener);
+                showAdInter(activity, interConfigStr, adConstStr, adListener);
             }
 
             @Override
             public void onSuccess(ImageAdEntity imageAdEntity) {
-                Log.i("showAdFullTb", "result=" + imageAdEntity);
+                Log.i("showAdInterTb", "result=" + imageAdEntity);
                 imageAdEntity = new ImageAdEntity();
                 // 请求替比广告成功
                 //设置当前广告信息

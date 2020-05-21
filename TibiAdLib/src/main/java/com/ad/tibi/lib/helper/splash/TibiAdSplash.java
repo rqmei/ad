@@ -316,7 +316,7 @@ public class TibiAdSplash {
     public void showAdFullTb(final Activity activity, final String splashConfigStr, final String adConstStr,
                              final ViewGroup adsParentLayout, final View skipView, final TextView timeView,
                              final AdListenerSplashFull adListener) {
-        TibiAdHttp.getAdInfo("user/account/base/info", new CallBack<ImageAdEntity>() {
+        TibiAdHttp.getAdInfo("my/current/notice", new CallBack<ImageAdEntity>() {
             @Override
             public void onStart() {
 

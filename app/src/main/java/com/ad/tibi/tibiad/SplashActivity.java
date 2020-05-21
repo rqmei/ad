@@ -1,5 +1,6 @@
 package com.ad.tibi.tibiad;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +19,7 @@ import com.ad.tibi.lib.helper.splash.inter.AdListenerSplashFull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
     @BindView(R.id.mFlAdContainer)
     FrameLayout mFlAdContainer;
     @BindView(R.id.tv_time)

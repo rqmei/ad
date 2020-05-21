@@ -26,6 +26,8 @@ public class TibiAdHttp {
         EasyHttp.init(application);
     }
 
+    private static String BASE_URL = "http://mobile.safe.tb.com/mobile/";
+
     /**
      * 获取广告相关的数据
      *
@@ -33,9 +35,9 @@ public class TibiAdHttp {
      * @param callBack 接口回调
      */
     public static void getAdInfo(String url, CallBack<ImageAdEntity> callBack) {
-        Log.i("getAdInfo", "请求开始");
+        Log.i("getAdInfo", "请求开始URL=" + BASE_URL + url);
         EasyHttp.get(url)
-                .baseUrl("http://192.168.18.225:8206/api/")
+                .baseUrl(BASE_URL)
                 .readTimeOut(30 * 1000)//局部定义读超时
                 .writeTimeOut(30 * 1000)
                 .connectTimeout(30 * 1000)
@@ -45,7 +47,7 @@ public class TibiAdHttp {
                 .timeStamp(true)
                 .addConverterFactory(GsonConverterFactory.create())
                 .execute(callBack);
-
+        Log.i("getAdInfo", "pram=" + EasyHttp.getInstance().getCommonParams());
     }
 
     /**

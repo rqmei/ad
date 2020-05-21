@@ -9,9 +9,9 @@ import java.io.Serializable;
  * @author yelian on 2020/5/19
  */
 public class ImageAdEntity implements Serializable {
-    
+
     private int width;
-    
+
     private int height;
     /**
      * 图片路径
@@ -31,7 +31,10 @@ public class ImageAdEntity implements Serializable {
      * 预留字段，后期可能做视频
      */
     private int type;
-
+    // 是否滚动（0：不滚动 ，1：滚动)
+    private int roll = 1;
+    // 滚动时间(秒)
+    private int rollTime = 10;
 
 
     public int getWidth() {
@@ -80,5 +83,21 @@ public class ImageAdEntity implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getRoll() {
+        return roll;
+    }
+
+    public void setRoll(int roll) {
+        this.roll = roll;
+    }
+
+    public int getRollTime() {
+        return rollTime;
+    }
+
+    public void setRollTime(int rollTime) {
+        this.rollTime = rollTime;
     }
 }
