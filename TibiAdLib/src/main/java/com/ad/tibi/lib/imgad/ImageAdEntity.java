@@ -25,17 +25,27 @@ public class ImageAdEntity implements Serializable {
     private String jumpPath = "http://www.baidu.com";
     /**
      * 下载路径
+     * http://tbandroid.timingbar.com/safe-online-apk/safe.apk
      */
-    private String downloadPath;
+    private String downloadPath = "http://tbandroid.timingbar.com/safe-online-apk/safe.apk";
     /**
      * 预留字段，后期可能做视频
+     * 1:图片跳转；2：文件下载；3：视频播放
      */
-    private int type;
-    // 是否滚动（0：不滚动 ，1：滚动)
+    private int type = 2;
+    /**
+     * 是否滚动（0：不滚动 ，1：滚动)
+     */
     private int roll = 1;
-    // 滚动时间(秒)
-    private int rollTime = 10;
 
+    /**
+     * 滚动时间(秒)
+     */
+    private int rollTime = 10;
+    /**
+     * 广告文章
+     */
+    private String adText;
 
     public int getWidth() {
         return width;
@@ -99,5 +109,13 @@ public class ImageAdEntity implements Serializable {
 
     public void setRollTime(int rollTime) {
         this.rollTime = rollTime;
+    }
+
+    public String getAdText() {
+        return adText;
+    }
+
+    public void setAdText(String adText) {
+        this.adText = adText;
     }
 }

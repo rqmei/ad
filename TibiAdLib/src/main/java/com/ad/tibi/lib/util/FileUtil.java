@@ -14,11 +14,20 @@ import java.io.File;
  */
 public class FileUtil {
     /**
+     * 检查文件是否存在
+     * @param saveFileName
+     * @return
+     */
+    public static boolean checkFile(String saveFileName) {
+        File file = new File(saveFileName);
+       return file.exists();
+    }
+    /**
      * 打开文件
      * @param mContext
      * @param filePath 文件地址
      */
-    public static void openFile1(Context mContext,String filePath) {
+    public static void openFile(Context mContext,String filePath) {
         try {
             Intent intent = new Intent();
             // 这是比较流氓的方法，绕过7.0的文件权限检查

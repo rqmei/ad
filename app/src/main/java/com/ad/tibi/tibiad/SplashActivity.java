@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.helper.splash.TibiAdSplash;
+import com.ad.tibi.lib.http.TibiAdHttp;
 import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.helper.splash.inter.AdListenerSplashFull;
 
@@ -56,6 +57,12 @@ public class SplashActivity extends Activity {
     protected void onPause() {
         super.onPause();
         canJump = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TibiAdHttp.getSingleAdHttp().unDispose();
     }
 
     /**

@@ -34,11 +34,11 @@ public class MainActivity extends Activity {
                 AdInit.getSingleAdInit().getIdMapCsj().get(AdConst.AD_WEBVIEW_BANNER),
                         flBanner,160,
                         adListenerSplashFull);
-        TibiAdInter.getSingleAdInter().showAdInter(this,
-                "tb:1,csj:0",
-                AdInit.getSingleAdInit().getIdMapCsj().get(AdConst.AD_INTER),
-                adListenerSplashFull);
-        TibiAdImageText.getSingleAdImageText().showAdImageTextTb(this, flAdIamgeText, adListenerSplashFull);
+//        TibiAdInter.getSingleAdInter().showAdInter(this,
+//                "tb:1,csj:0",
+//                AdInit.getSingleAdInit().getIdMapCsj().get(AdConst.AD_INTER),
+//                adListenerSplashFull);
+//        TibiAdImageText.getSingleAdImageText().showAdImageTextTb(this, flAdIamgeText, adListenerSplashFull);
     }
 
     AdListenerSplashFull adListenerSplashFull = new AdListenerSplashFull() {

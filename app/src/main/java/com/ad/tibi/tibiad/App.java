@@ -16,15 +16,15 @@ public class App extends Application {
         // 必须初始化
         TibiAdHttp.initEasyHttp(this);
         Map<String, String> gdtIdMap = new HashMap<String, String>();
-        gdtIdMap.put(AdConst.AD_SPLASH, "d61e1a3621ae1f91d8c80fb2e499dc50");
+        gdtIdMap.put(AdConst.AD_SPLASH, "9040714184494018");
         gdtIdMap.put(AdConst.AD_INTER, "4061006419774284");
         gdtIdMap.put(AdConst.AD_FLOW_INDEX, "6041707449579237");
         gdtIdMap.put(AdConst.AD_TIEPIAN_LIVE, "3031506499071361");
-        gdtIdMap.put(AdConst.AD_WEBVIEW_BANNER, "3050767842595815");
+        gdtIdMap.put(AdConst.AD_WEBVIEW_BANNER, "1080958885885321");
         gdtIdMap.put(AdConst.AD_BACK, "8021700419077347");
         gdtIdMap.put(AdConst.AD_MID, "8021700419077347");
         // 第一个参数是Context上下文;第二个参数是您在DMP上获得的行为数据源ID;第三个参数是您在DMP上获得AppSecretKey
-        AdInit.getSingleAdInit().initGDTAd(this, "1110522576,", gdtIdMap);
+        AdInit.getSingleAdInit().initGDTAd(this, "1105344611,", gdtIdMap);
 
         Map<String, String> csjIdMap = new HashMap<String, String>();
         csjIdMap.put(AdConst.AD_SPLASH, "887324838");

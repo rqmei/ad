@@ -5,10 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.R;
@@ -33,6 +30,7 @@ import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.zhouyou.http.callback.CallBack;
 import com.zhouyou.http.exception.ApiException;
+import com.zhouyou.http.model.HttpParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +60,7 @@ public class TibiAdBanner {
      */
     public void showAdBanner(final Activity activity, final String splashConfigStr, final String adConstStr,
                              final ViewGroup adsParentLayout, int expressViewHeight, final AdListenerSplashFull adListener) {
-        // 广告类型
+        // 随机获取广告类型
         String adType = AdRandomUtil.getRandomAdName(splashConfigStr);
         switch (adType) {
             case AdNameType.GDT:
@@ -129,74 +127,75 @@ public class TibiAdBanner {
                 }
                 TTNativeExpressAd mTTAd = ads.get(0);
                 mTTAd.setSlideIntervalTime(30 * 1000);
-                bindAdListener(activity,mTTAd,mBannerContainer);
+                bindAdListener(activity, mTTAd, mBannerContainer);
                 mTTAd.render();
             }
         });
 
     }
-    private void bindAdListener(Activity activity,TTNativeExpressAd ad, final ViewGroup mBannerContainer) {
+
+    private void bindAdListener(Activity activity, TTNativeExpressAd ad, final ViewGroup mBannerContainer) {
         ad.setExpressInteractionListener(new TTNativeExpressAd.ExpressAdInteractionListener() {
             @Override
             public void onAdClicked(View view, int type) {
-               Log.i("showAdBannerCsj", "广告被点击");
+                Log.i("showAdBannerCsj", "广告被点击");
             }
 
             @Override
             public void onAdShow(View view, int type) {
-               Log.i("showAdBannerCsj", "广告展示");
+                Log.i("showAdBannerCsj", "广告展示");
             }
 
             @Override
             public void onRenderFail(View view, String msg, int code) {
-               Log.i("showAdBannerCsj", msg + " code:" + code);
+                Log.i("showAdBannerCsj", msg + " code:" + code);
             }
 
             @Override
             public void onRenderSuccess(View view, float width, float height) {
                 //返回view的宽高 单位 dp
-               Log.i("showAdBannerCsj", "渲染成功");
+                Log.i("showAdBannerCsj", "渲染成功");
                 mBannerContainer.removeAllViews();
                 mBannerContainer.addView(view);
             }
         });
         //dislike设置
-        bindDislike(activity,ad, false,mBannerContainer);
+        bindDislike(activity, ad, false, mBannerContainer);
         if (ad.getInteractionType() != TTAdConstant.INTERACTION_TYPE_DOWNLOAD) {
             return;
         }
         ad.setDownloadListener(new TTAppDownloadListener() {
             @Override
             public void onIdle() {
-                Log.i("showAdBannerCsj",  "点击开始下载");
+                Log.i("showAdBannerCsj", "点击开始下载");
             }
 
             @Override
             public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
                 if (!mHasShowDownloadActive) {
                     mHasShowDownloadActive = true;
-                   Log.i("showAdBannerCsj", "下载中，点击暂停");
+                    Log.i("showAdBannerCsj", "下载中，点击暂停");
                 }
             }
 
             @Override
             public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
-               Log.i("showAdBannerCsj", "下载暂停，点击继续");
+                Log.i("showAdBannerCsj", "下载暂停，点击继续");
             }
 
             @Override
             public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
-               Log.i("showAdBannerCsj", "下载失败，点击重新下载");
+                Log.i("showAdBannerCsj", "下载失败，点击重新下载");
             }
 
             @Override
             public void onInstalled(String fileName, String appName) {
-               Log.i("showAdBannerCsj", "安装完成，点击图片打开");
+                Log.i("showAdBannerCsj", "安装完成，点击图片打开");
             }
 
             @Override
             public void onDownloadFinished(long totalBytes, String fileName, String appName) {
-               Log.i("showAdBannerCsj", "点击安装");
+                Log.i("showAdBannerCsj", "点击安装");
             }
         });
     }
@@ -207,7 +206,7 @@ public class TibiAdBanner {
      * @param ad
      * @param customStyle 是否自定义样式，true:样式自定义
      */
-    private void bindDislike(Activity activity,TTNativeExpressAd ad, boolean customStyle, final ViewGroup mBannerContainer) {
+    private void bindDislike(Activity activity, TTNativeExpressAd ad, boolean customStyle, final ViewGroup mBannerContainer) {
         if (customStyle) {
             //使用自定义样式
             List<FilterWord> words = ad.getFilterWords();
@@ -220,7 +219,7 @@ public class TibiAdBanner {
                 @Override
                 public void onItemClick(FilterWord filterWord) {
                     //屏蔽广告
-                   Log.i("showAdBannerCsj", "点击 " + filterWord.getName());
+                    Log.i("showAdBannerCsj", "点击 " + filterWord.getName());
                     //用户选择不喜欢原因后，移除广告展示
                     mBannerContainer.removeAllViews();
                 }
@@ -232,17 +231,18 @@ public class TibiAdBanner {
         ad.setDislikeCallback(activity, new TTAdDislike.DislikeInteractionCallback() {
             @Override
             public void onSelected(int position, String value) {
-               Log.i("showAdBannerCsj", "点击 " + value);
+                Log.i("showAdBannerCsj", "点击 " + value);
                 //用户选择不喜欢原因后，移除广告展示
                 mBannerContainer.removeAllViews();
             }
 
             @Override
             public void onCancel() {
-               Log.i("showAdBannerCsj", "点击取消 ");
+                Log.i("showAdBannerCsj", "点击取消 ");
             }
         });
     }
+
     private boolean mHasShowDownloadActive = false;
 
     /**
@@ -256,7 +256,8 @@ public class TibiAdBanner {
      */
     public void showAdBannerTb(final Activity activity, final String splashConfigStr, final String adConstStr,
                                final ViewGroup adsParentLayout, final int expressViewHeight, final AdListenerSplashFull adListener) {
-        TibiAdHttp.getAdInfo("my/current/notice", new CallBack<ImageAdEntity>() {
+        HttpParams httpParams = new HttpParams();
+        TibiAdHttp.getSingleAdHttp().getAdInfo(httpParams, new CallBack<ImageAdEntity>() {
             @Override
             public void onStart() {
 
@@ -278,6 +279,10 @@ public class TibiAdBanner {
             public void onSuccess(ImageAdEntity imageAdEntity) {
                 Log.i("showAdFullTb", "result=" + imageAdEntity);
                 imageAdEntity = new ImageAdEntity();
+                List<String> iamges = new ArrayList<>();
+                iamges.add(imageAdEntity.getUrl());
+                iamges.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=403900030,2074040631&fm=26&gp=0.jpg");
+
                 int Height = DensityUtils.dp2px(activity, expressViewHeight);
                 // 请求替比广告成功
                 // 设置广告view
@@ -287,21 +292,18 @@ public class TibiAdBanner {
                 Banner banner = view.findViewById(R.id.banner);
                 banner.setLayoutParams(layoutParams);
                 // 设置图片加载器
-                banner.setImageLoader(new BannerImageLoader());
-                // 设置banner动画效果
-                banner.setBannerAnimation(Transformer.DepthPage);
-                // 设置自动轮播，默认为true
-                banner.isAutoPlay(imageAdEntity.getRoll() == 1);
-                // 设置轮播时间
-                banner.setDelayTime(imageAdEntity.getRollTime() * 1000);
-                // 设置指示器位置（当banner模式中有指示器时）
-                banner.setIndicatorGravity(BannerConfig.CENTER);
-                List<String> iamges = new ArrayList<>();
-                iamges.add(imageAdEntity.getUrl());
-                iamges.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=403900030,2074040631&fm=26&gp=0.jpg");
-                banner.setImages(iamges);
+                banner.setImageLoader(new BannerImageLoader(adListener))
+                        // 设置banner动画效果
+                        .setBannerAnimation(Transformer.DepthPage)
+                        // 设置自动轮播，默认为true
+                        .isAutoPlay(imageAdEntity.getRoll() == 1)
+                        // 设置轮播时间
+                        .setDelayTime(imageAdEntity.getRollTime() * 1000)
+                        // 设置指示器位置（当banner模式中有指示器时）
+                        .setIndicatorGravity(BannerConfig.CENTER)
+                        .setImages(iamges);
 
-                //设置当前广告信息
+                // 设置当前广告信息
                 AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
                 // 加入广告
                 adsParentLayout.removeAllViews();
@@ -311,9 +313,7 @@ public class TibiAdBanner {
                 banner.setOnBannerListener(new OnBannerListener() {
                     @Override
                     public void OnBannerClick(int position) {
-                        if (adListener != null) {
-                            adListener.onAdClick(AdNameType.TB);
-                        }
+                        TibiAdHttp.getSingleAdHttp().onAdClick(adListener);
                     }
                 });
             }

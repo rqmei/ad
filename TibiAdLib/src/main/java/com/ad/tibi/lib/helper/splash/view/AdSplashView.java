@@ -13,13 +13,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.ad.tibi.lib.AdInit;
 import com.ad.tibi.lib.R;
 import com.ad.tibi.lib.helper.splash.inter.AdListenerSplashFull;
 import com.ad.tibi.lib.helper.splash.inter.PermissionListener;
 import com.ad.tibi.lib.helper.splash.inter.TimeListener;
+import com.ad.tibi.lib.http.TibiAdHttp;
+import com.ad.tibi.lib.imgad.ImageAdEntity;
 import com.ad.tibi.lib.util.AdNameType;
 import com.ad.tibi.lib.util.DensityUtils;
+import com.ad.tibi.lib.util.FileUtil;
 import com.ad.tibi.lib.util.ImageLoadUtil;
+import com.ad.tibi.lib.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,11 +123,18 @@ public class AdSplashView extends FrameLayout {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 点击广告
-                if (advertListener != null) {
-                    advertListener.onAdClick(AdNameType.TB);
-                    countDownView.stop();
+                ImageAdEntity imageAdEntity = AdInit.getSingleAdInit().getImageAdEntity();
+                int type = imageAdEntity.getType();
+                if (type == 1 && !StringUtil.isNullOrEmpty(imageAdEntity.getJumpPath())) {
+                    // 统计点击量
+                    TibiAdHttp.getSingleAdHttp().onAdClick( advertListener);
+
+                } else if (type == 2 && !StringUtil.isNullOrEmpty(imageAdEntity.getDownloadPath())) {
+                    // 下载文件
+                    TibiAdHttp.getSingleAdHttp().downFile(mContext, imageAdEntity.getDownloadPath());
                 }
+                // 暂停倒计时
+                countDownView.stop();
             }
         });
 
@@ -229,12 +241,12 @@ public class AdSplashView extends FrameLayout {
     /**
      * 设置广告图片
      *
-     * @param httpUrl 图片网络路径
+     * @param imageUrl 图片网络路径
      */
-    public void setImage(String httpUrl) {
+    public void setImage(String imageUrl) {
         if (imageView != null) {
             imageView.setVisibility(VISIBLE);
-            ImageLoadUtil.loadImage(mContext,httpUrl,imageView,advertListener);
+            ImageLoadUtil.loadImage(mContext, imageUrl, imageView, advertListener);
         }
         startTime();
     }

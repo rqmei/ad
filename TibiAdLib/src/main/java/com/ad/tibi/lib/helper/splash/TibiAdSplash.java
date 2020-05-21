@@ -26,6 +26,7 @@ import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
 import com.zhouyou.http.callback.CallBack;
 import com.zhouyou.http.exception.ApiException;
+import com.zhouyou.http.model.HttpParams;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,12 +75,18 @@ public class TibiAdSplash {
                 // 替比
                 showAdFullTb(activity, splashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                 break;
+            case AdNameType.NO:
+                // 没有广告
+
+                break;
             default:
                 if (stop) {
                     return;
                 }
                 cancelTimerTask();
-                adListener.onAdFailed(activity.getString(R.string.all_ad_error));
+                if (adListener != null) {
+                    adListener.onAdFailed(activity.getString(R.string.all_ad_error));
+                }
         }
     }
 
@@ -104,6 +111,7 @@ public class TibiAdSplash {
                 new SplashADListener() {
                     @Override
                     public void onADDismissed() {
+
                         if (adListener != null) {
                             adListener.onAdDismissed();
                         }
@@ -188,20 +196,26 @@ public class TibiAdSplash {
                         return;
                     }
                     cancelTimerTask();
-
                     String newSplashConfigStr = splashConfigStr.replace(AdNameType.CSJ, AdNameType.NO);
                     showAdFull(activity, newSplashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                 }
 
                 @Override
                 public void onTimeout() {
-
+                    if (stop) {
+                        return;
+                    }
+                    cancelTimerTask();
+                    String newSplashConfigStr = splashConfigStr.replace(AdNameType.CSJ, AdNameType.NO);
+                    showAdFull(activity, newSplashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                 }
 
                 @Override
                 public void onSplashAdLoad(TTSplashAd ad) {
                     if (ad == null) {
                         // 广告是空
+                        String newSplashConfigStr = splashConfigStr.replace(AdNameType.CSJ, AdNameType.NO);
+                        showAdFull(activity, newSplashConfigStr, adConstStr, adsParentLayout, skipView, timeView, adListener);
                         return;
                     }
                     //获取SplashView
@@ -213,8 +227,6 @@ public class TibiAdSplash {
                         adsParentLayout.removeAllViews();
                         //把SplashView 添加到ViewGroup中,注意开屏广告view：width >=70%屏幕宽；height >=50%屏幕高
                         adsParentLayout.addView(view);
-                        //设置不开启开屏广告倒计时功能以及不显示跳过按钮,如果这么设置，您需要自定义倒计时逻辑
-                        //ad.setNotAllowSdkCountdown();
                     } else {
                         // 跳转页面
                         if (adListener != null) {
@@ -236,13 +248,14 @@ public class TibiAdSplash {
                         public void onAdShow(View view, int type) {
                             Log.i("TibiAdSplash", "onAdShow开屏广告展示...");
                             if (adListener != null) {
-                                adListener.onAdDismissed();
+                                adListener.onAdPrepared(AdNameType.CSJ);
                             }
                         }
 
                         @Override
                         public void onAdSkip() {
                             Log.i("TibiAdSplash", "onAdSkip开屏广告跳过...");
+
                             if (adListener != null) {
                                 adListener.onAdDismissed();
                             }
@@ -251,6 +264,7 @@ public class TibiAdSplash {
                         @Override
                         public void onAdTimeOver() {
                             Log.i("TibiAdSplash", "onAdTimeOver开屏广告倒计时结束...");
+
                             if (adListener != null) {
                                 adListener.onAdDismissed();
                             }
@@ -316,43 +330,45 @@ public class TibiAdSplash {
     public void showAdFullTb(final Activity activity, final String splashConfigStr, final String adConstStr,
                              final ViewGroup adsParentLayout, final View skipView, final TextView timeView,
                              final AdListenerSplashFull adListener) {
-        TibiAdHttp.getAdInfo("my/current/notice", new CallBack<ImageAdEntity>() {
-            @Override
-            public void onStart() {
+        HttpParams httpParams = new HttpParams();
+        TibiAdHttp.getSingleAdHttp().getAdInfo(httpParams, new CallBack<ImageAdEntity>() {
+                    @Override
+                    public void onStart() {
 
-            }
+                    }
 
-            @Override
-            public void onCompleted() {
-                Log.i("showAdFullTb", "onCompleted =");
-            }
+                    @Override
+                    public void onCompleted() {
+                        Log.i("showAdFullTb", "onCompleted =");
+                    }
 
-            @Override
-            public void onError(ApiException e) {
-                Log.i("showAdFullTb", "onError =" + e.getDisplayMessage());
-                // 请求替比广告失败，加载第三方广告
-                showAdFull(activity, splashConfigStr, adConstStr, adsParentLayout,
-                        skipView, timeView, adListener);
-            }
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.i("showAdFullTb", "onError =" + e.getDisplayMessage());
+                        TibiAdHttp.getSingleAdHttp().unDispose();
+                        // 请求替比广告失败，加载第三方广告
+                        showAdFull(activity, splashConfigStr, adConstStr, adsParentLayout,
+                                skipView, timeView, adListener);
+                    }
 
-            @Override
-            public void onSuccess(ImageAdEntity imageAdEntity) {
-                Log.i("showAdFullTb", "result=" + imageAdEntity);
-                imageAdEntity = new ImageAdEntity();
-                // 请求替比广告成功
-                skipView.setVisibility(View.GONE);
-                // 设置广告view
-                AdSplashView adSplashView = new AdSplashView(activity);
-                adSplashView.setTime_show(true);
-                adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
-                adSplashView.setAdvertListener(adListener);
-                //设置当前广告信息
-                AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
-                // 加入广告
-                adsParentLayout.removeAllViews();
-                adsParentLayout.addView(adSplashView);
-            }
-        });
+                    @Override
+                    public void onSuccess(ImageAdEntity imageAdEntity) {
+                        Log.i("showAdFullTb", "result=" + imageAdEntity);
+                        imageAdEntity = new ImageAdEntity();
+                        // 请求替比广告成功
+                        skipView.setVisibility(View.GONE);
+                        // 设置广告view
+                        AdSplashView adSplashView = new AdSplashView(activity);
+                        adSplashView.setTime_show(true);
+                        adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
+                        adSplashView.setAdvertListener(adListener);
+                        //设置当前广告信息
+                        AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
+                        // 加入广告
+                        adsParentLayout.removeAllViews();
+                        adsParentLayout.addView(adSplashView);
+                    }
+                });
     }
 
 

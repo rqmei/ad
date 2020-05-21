@@ -24,6 +24,7 @@ import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd;
 import com.zhouyou.http.callback.CallBack;
 import com.zhouyou.http.exception.ApiException;
+import com.zhouyou.http.model.HttpParams;
 
 import java.util.List;
 
@@ -64,6 +65,12 @@ public class TibiAdInter {
                 // 替比
                 showAdInterTb(activity, interConfigStr, adConstStr, adListener);
                 break;
+            case AdNameType.NO:
+                // 加载广告失败
+                if (adListener != null) {
+                    adListener.onAdFailed(adType);
+                }
+                break;
             default:
                 if (stop) {
                     return;
@@ -77,6 +84,14 @@ public class TibiAdInter {
 
     }
 
+    /**
+     * 穿山甲
+     *
+     * @param activity
+     * @param interConfigStr
+     * @param adConstStr
+     * @param adListener
+     */
     public void showAdInterCsj(final Activity activity, final String interConfigStr, final String adConstStr,
                                final AdListenerSplashFull adListener) {
         int n = UIUtils.getAdWidth(activity);
@@ -92,6 +107,11 @@ public class TibiAdInter {
             @Override
             public void onError(int i, String s) {
                 Log.i("插屏", "onError=" + s + "," + i);
+                if (activity == null || activity.isFinishing()) {
+                    return;
+                }
+                String newSplashConfigStr = interConfigStr.replace(AdNameType.CSJ, AdNameType.NO);
+                showAdInter(activity, newSplashConfigStr, adConstStr, adListener);
             }
 
             @Override
@@ -104,7 +124,7 @@ public class TibiAdInter {
                     return;
                 }
                 TTNativeExpressAd ttNativeExpressAd = list.get(0);
-                bindAdCsjListener(activity, ttNativeExpressAd,adListener);
+                bindAdCsjListener(activity, ttNativeExpressAd, adListener);
                 ttNativeExpressAd.render();
             }
         });
@@ -120,7 +140,7 @@ public class TibiAdInter {
             public void onAdDismiss() {
                 Toast.makeText(activity, "广告关闭", Toast.LENGTH_SHORT).show();
                 // 关闭广告框
-                if(adListener!=null) {
+                if (adListener != null) {
                     adListener.onAdDismissed();
                 }
             }
@@ -129,7 +149,7 @@ public class TibiAdInter {
             public void onAdClicked(View view, int type) {
                 Toast.makeText(activity, "广告被点击", Toast.LENGTH_SHORT).show();
                 // 关闭广告框
-                if(adListener!=null) {
+                if (adListener != null) {
                     adListener.onAdClick(AdNameType.CSJ);
                 }
             }
@@ -150,7 +170,7 @@ public class TibiAdInter {
                 Toast.makeText(activity, "渲染成功", Toast.LENGTH_SHORT).show();
                 ad.showInteractionExpressAd(activity);
                 // 在渲染成功回调时展示广告，提升体验
-                if(adListener!=null) {
+                if (adListener != null) {
                     adListener.onAdPrepared(AdNameType.CSJ);
                 }
             }
@@ -205,65 +225,67 @@ public class TibiAdInter {
 
     public void showAdInterTb(final Activity activity, final String interConfigStr, final String adConstStr,
                               final AdListenerSplashFull adListener) {
-        TibiAdHttp.getAdInfo("my/current/notice", new CallBack<ImageAdEntity>() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onCompleted() {
-                Log.i("showAdInterTb", "onCompleted =");
-            }
-
-            @Override
-            public void onError(ApiException e) {
-                Log.i("showAdInterTb", "onError =" + e.getDisplayMessage());
-                // 请求替比广告失败，加载第三方广告
-                showAdInter(activity, interConfigStr, adConstStr, adListener);
-            }
-
-            @Override
-            public void onSuccess(ImageAdEntity imageAdEntity) {
-                Log.i("showAdInterTb", "result=" + imageAdEntity);
-                imageAdEntity = new ImageAdEntity();
-                // 请求替比广告成功
-                //设置当前广告信息
-                AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
-                // 加入广告
-                View view = LayoutInflater.from(activity).inflate(R.layout.tb_ad_inter, null);
-                ImageView ivAd = view.findViewById(R.id.iv_ad);
-                ImageView ivAdClose = view.findViewById(R.id.iv_ad_close);
-                ivAd.setOnClickListener(new View.OnClickListener() {
+        HttpParams httpParams = new HttpParams();
+        TibiAdHttp.getSingleAdHttp().getAdInfo( httpParams, new CallBack<ImageAdEntity>() {
                     @Override
-                    public void onClick(View v) {
-                        if(adListener!=null) {
-                            adListener.onAdClick(AdNameType.TB);
-                            adListener.onAdDismissed();
-                        }
-                        // 关闭广告框
-                        if (customDialog != null && customDialog.isShowing()) {
-                            customDialog.dismiss();
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        Log.i("showAdInterTb", "onCompleted =");
+                    }
+
+                    @Override
+                    public void onError(ApiException e) {
+                        Log.i("showAdInterTb", "onError =" + e.getDisplayMessage());
+                        // 请求替比广告失败，加载第三方广告
+                        showAdInter(activity, interConfigStr, adConstStr, adListener);
+                    }
+
+                    @Override
+                    public void onSuccess(ImageAdEntity imageAdEntity) {
+                        Log.i("showAdInterTb", "result=" + imageAdEntity);
+                        imageAdEntity = new ImageAdEntity();
+                        // 请求替比广告成功
+                        //设置当前广告信息
+                        AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
+                        // 加入广告
+                        View view = LayoutInflater.from(activity).inflate(R.layout.tb_ad_inter, null);
+                        ImageView ivAd = view.findViewById(R.id.iv_ad);
+                        ImageView ivAdClose = view.findViewById(R.id.iv_ad_close);
+                        ivAd.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // 统计点击量
+                                TibiAdHttp.getSingleAdHttp().onAdOperation(activity, adListener);
+                                // 关闭广告框
+                                if (customDialog != null && customDialog.isShowing()) {
+                                    customDialog.dismiss();
+                                }
+                            }
+                        });
+                        ivAdClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // 关闭广告框
+                                if (adListener != null) {
+                                    adListener.onAdDismissed();
+                                }
+                                if (customDialog != null && customDialog.isShowing()) {
+                                    customDialog.dismiss();
+                                }
+                            }
+                        });
+                        ImageLoadUtil.loadImage(activity, imageAdEntity.getUrl(), ivAd, adListener);
+                        int n = UIUtils.getAdWidth(activity);
+                        customDialog = new CustomDialog(activity, n * 3 / 4, n, view, R.style.CustomDialog);
+                        customDialog.show();
+                        if (adListener != null) {
+                            adListener.onAdPrepared(AdNameType.TB);
                         }
                     }
                 });
-                ivAdClose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 关闭广告框
-                        if(adListener!=null) {
-                            adListener.onAdDismissed();
-                        }
-                        if (customDialog != null && customDialog.isShowing()) {
-                            customDialog.dismiss();
-                        }
-                    }
-                });
-                ImageLoadUtil.loadImage(activity, imageAdEntity.getUrl(), ivAd, adListener);
-                int n = UIUtils.getAdWidth(activity);
-                customDialog = new CustomDialog(activity, n * 3 / 4, n, view, R.style.CustomDialog);
-                customDialog.show();
-            }
-        });
     }
 }
