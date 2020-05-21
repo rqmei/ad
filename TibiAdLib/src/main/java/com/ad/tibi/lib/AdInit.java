@@ -69,12 +69,13 @@ public class AdInit {
         idMapGDT = gdtIdMap;
         appIdGDT = gdtAdAppId;
         GDTADManager.getInstance().initWith(context, gdtAdAppId);
-        Log.i("AdInit", "初始化：" + AdNameType.GDT);
+        Log.i("initGDTAd", "初始化：" + AdNameType.GDT);
     }
 
     //穿山甲
     public void initCsjAd(Application context, String csjAdAppId, String appName,
                           Map<String, String> csjIdMap, boolean useTextureView) {
+        Log.i("initCsjAd", "初始化：" + AdNameType.CSJ);
         mContext = context;
         idMapCsj = csjIdMap;
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常

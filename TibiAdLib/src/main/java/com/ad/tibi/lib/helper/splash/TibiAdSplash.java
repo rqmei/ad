@@ -107,6 +107,7 @@ public class TibiAdSplash {
                                final AdListenerSplashFull adListener) {
         adListener.onStartRequest(AdNameType.GDT);
         AdInit adInit = AdInit.getSingleAdInit();
+        Log.i("showAdFullGDT", "posId=" + adInit.getIdMapGDT().get(adConstStr) + ",adConstStr=" + adConstStr);
         SplashAD splash = new SplashAD(activity, skipView, adInit.getIdMapGDT().get(adConstStr),
                 new SplashADListener() {
                     @Override
@@ -119,6 +120,7 @@ public class TibiAdSplash {
 
                     @Override
                     public void onNoAD(AdError adError) {
+                        Log.i("showAdFullGDT", "code====" + adError.getErrorCode()+",msg="+adError.getErrorMsg());
                         if (stop) {
                             return;
                         }
@@ -148,11 +150,13 @@ public class TibiAdSplash {
 
                     /**
                      * 倒计时回调，返回广告还将被展示的剩余时间。
-                     * @param l 剩余毫秒数
+                     * @param millisUntilFinished 剩余毫秒数
                      */
                     @Override
-                    public void onADTick(long l) {
-                        timeView.setText(String.valueOf((l / 1000 + 1)));
+                    public void onADTick(long millisUntilFinished) {
+                        if (timeView != null) {
+                            timeView.setText(String.format("点击跳过 %d", Math.round(millisUntilFinished / 1000f)));
+                        }
                     }
 
                     @Override
@@ -160,11 +164,15 @@ public class TibiAdSplash {
 
                     }
 
+                    /**
+                     * 加载成功
+                     * @param l
+                     */
                     @Override
                     public void onADLoaded(long l) {
 
                     }
-                }, 0);
+                }, 5000);
 
         splash.fetchAndShowIn(adsParentLayout);
     }
@@ -182,8 +190,9 @@ public class TibiAdSplash {
             float expressViewHeight = UIUtils.getHeight(activity);
             //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
             Log.i("showAdFullCsj", "adConstStr=" + adConstStr);
+            String posId = AdInit.getSingleAdInit().getIdMapCsj().get(adConstStr);
             AdSlot adSlot = new AdSlot.Builder()
-                    .setCodeId(adConstStr)
+                    .setCodeId(posId)
                     .setSupportDeepLink(true)
                     .setImageAcceptedSize(1080, 1920)
                     //模板广告需要设置期望个性化模板广告的大小,单位dp,代码位是否属于个性化模板广告，请在穿山甲平台查看
@@ -332,43 +341,43 @@ public class TibiAdSplash {
                              final AdListenerSplashFull adListener) {
         HttpParams httpParams = new HttpParams();
         TibiAdHttp.getSingleAdHttp().getAdInfo(httpParams, new CallBack<ImageAdEntity>() {
-                    @Override
-                    public void onStart() {
+            @Override
+            public void onStart() {
 
-                    }
+            }
 
-                    @Override
-                    public void onCompleted() {
-                        Log.i("showAdFullTb", "onCompleted =");
-                    }
+            @Override
+            public void onCompleted() {
+                Log.i("showAdFullTb", "onCompleted =");
+            }
 
-                    @Override
-                    public void onError(ApiException e) {
-                        Log.i("showAdFullTb", "onError =" + e.getDisplayMessage());
-                        TibiAdHttp.getSingleAdHttp().unDispose();
-                        // 请求替比广告失败，加载第三方广告
-                        showAdFull(activity, splashConfigStr, adConstStr, adsParentLayout,
-                                skipView, timeView, adListener);
-                    }
+            @Override
+            public void onError(ApiException e) {
+                Log.i("showAdFullTb", "onError =" + e.getDisplayMessage());
+                TibiAdHttp.getSingleAdHttp().unDispose();
+                // 请求替比广告失败，加载第三方广告
+                showAdFull(activity, splashConfigStr, adConstStr, adsParentLayout,
+                        skipView, timeView, adListener);
+            }
 
-                    @Override
-                    public void onSuccess(ImageAdEntity imageAdEntity) {
-                        Log.i("showAdFullTb", "result=" + imageAdEntity);
-                        imageAdEntity = new ImageAdEntity();
-                        // 请求替比广告成功
-                        skipView.setVisibility(View.GONE);
-                        // 设置广告view
-                        AdSplashView adSplashView = new AdSplashView(activity);
-                        adSplashView.setTime_show(true);
-                        adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
-                        adSplashView.setAdvertListener(adListener);
-                        //设置当前广告信息
-                        AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
-                        // 加入广告
-                        adsParentLayout.removeAllViews();
-                        adsParentLayout.addView(adSplashView);
-                    }
-                });
+            @Override
+            public void onSuccess(ImageAdEntity imageAdEntity) {
+                Log.i("showAdFullTb", "result=" + imageAdEntity);
+                imageAdEntity = new ImageAdEntity();
+                // 请求替比广告成功
+                skipView.setVisibility(View.GONE);
+                // 设置广告view
+                AdSplashView adSplashView = new AdSplashView(activity);
+                adSplashView.setTime_show(true);
+                adSplashView.setImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589869298976&di=d484e8fb5780b9c6b2e36fabd9badd1a&imgtype=0&src=http%3A%2F%2Fa0.att.hudong.com%2F56%2F12%2F01300000164151121576126282411.jpg");
+                adSplashView.setAdvertListener(adListener);
+                //设置当前广告信息
+                AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
+                // 加入广告
+                adsParentLayout.removeAllViews();
+                adsParentLayout.addView(adSplashView);
+            }
+        });
     }
 
 

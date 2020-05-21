@@ -24,6 +24,9 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd;
+import com.qq.e.ads.banner2.UnifiedBannerADListener;
+import com.qq.e.ads.banner2.UnifiedBannerView;
+import com.qq.e.comm.util.AdError;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -88,8 +91,58 @@ public class TibiAdBanner {
      * @param adsParentLayout
      * @param adListener
      */
+    UnifiedBannerView bannerView;
+
     public void showAdBannerGdt(final Activity activity, final String splashConfigStr, final String adConstStr,
                                 final ViewGroup adsParentLayout, int expressViewHeight, final AdListenerSplashFull adListener) {
+        String posId = AdInit.getSingleAdInit().getIdMapGDT().get(adConstStr);
+        if (bannerView != null) {
+            adsParentLayout.removeView(bannerView);
+            bannerView.destroy();
+        }
+        bannerView = new UnifiedBannerView(activity, posId, new UnifiedBannerADListener() {
+            @Override
+            public void onNoAD(AdError adError) {
+
+            }
+
+            @Override
+            public void onADReceive() {
+                adsParentLayout.removeAllViews();
+                adsParentLayout.addView(bannerView);
+            }
+
+            @Override
+            public void onADExposure() {
+
+            }
+
+            @Override
+            public void onADClosed() {
+
+            }
+
+            @Override
+            public void onADClicked() {
+
+            }
+
+            @Override
+            public void onADLeftApplication() {
+
+            }
+
+            @Override
+            public void onADOpenOverlay() {
+
+            }
+
+            @Override
+            public void onADCloseOverlay() {
+
+            }
+        });
+        bannerView.loadAD();
 
     }
 
@@ -107,8 +160,9 @@ public class TibiAdBanner {
                                 final ViewGroup mBannerContainer, int expressViewHeight, final AdListenerSplashFull adListener) {
         TTAdSdk.getAdManager().requestPermissionIfNecessary(activity);
         float expressViewWidth = UIUtils.getScreenWidthDp(activity);
+        String posId = AdInit.getSingleAdInit().getIdMapCsj().get(adConstStr);
         AdSlot adSlot = new AdSlot.Builder()
-                .setCodeId(adConstStr) //广告位id
+                .setCodeId(posId) //广告位id
                 .setSupportDeepLink(true)
                 .setAdCount(1) //请求广告数量为1到3条
                 .setExpressViewAcceptedSize(expressViewWidth, expressViewHeight) //期望模板广告view的size,单位dp

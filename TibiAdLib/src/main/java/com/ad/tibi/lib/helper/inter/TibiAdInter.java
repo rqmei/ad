@@ -22,6 +22,11 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd;
+import com.qq.e.ads.cfg.VideoOption;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialAD;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialADListener;
+import com.qq.e.comm.constants.AdPatternType;
+import com.qq.e.comm.util.AdError;
 import com.zhouyou.http.callback.CallBack;
 import com.zhouyou.http.exception.ApiException;
 import com.zhouyou.http.model.HttpParams;
@@ -79,9 +84,81 @@ public class TibiAdInter {
         }
     }
 
+    UnifiedInterstitialAD iad;
+
     public void showAdInterTecentGDT(Activity activity, String interConfigStr, String adConstStr,
                                      AdListenerSplashFull adListener) {
+        String posId = AdInit.getSingleAdInit().getIdMapGDT().get(adConstStr);
+        Log.i("showAdInterTecentGDT","posId="+posId);
+        iad = new UnifiedInterstitialAD(activity, posId, new UnifiedInterstitialADListener() {
+            @Override
+            public void onADReceive() {
+                // 广告加载成功
+                Log.i("showAdInterTecentGDT", "onADReceive====");
+                iad.show();
+            }
 
+            @Override
+            public void onVideoCached() {
+                Log.i("showAdInterTecentGDT", "onVideoCached====");
+            }
+
+            @Override
+            public void onNoAD(AdError adError) {
+                Log.i("showAdInterTecentGDT", "code====" + adError.getErrorCode()+",msg="+adError.getErrorMsg());
+            }
+
+            @Override
+            public void onADOpened() {
+                Log.i("showAdInterTecentGDT", "onADOpened====");
+            }
+
+            @Override
+            public void onADExposure() {
+                Log.i("showAdInterTecentGDT", "onADExposure====");
+            }
+
+            @Override
+            public void onADClicked() {
+                Log.i("showAdInterTecentGDT", "onADClicked====");
+            }
+
+            @Override
+            public void onADLeftApplication() {
+                Log.i("showAdInterTecentGDT", "onADLeftApplication====");
+            }
+
+            @Override
+            public void onADClosed() {
+
+            }
+        });
+        setVideoOption(iad);
+        iad.loadAD();
+    }
+
+    private void setVideoOption(UnifiedInterstitialAD iad) {
+        VideoOption.Builder builder = new VideoOption.Builder();
+        VideoOption option = builder.setAutoPlayMuted(false)
+                .setDetailPageMuted(false)
+                .build();
+        iad.setVideoOption(option);
+        iad.setMinVideoDuration(10);
+        iad.setMaxVideoDuration(100);
+
+        /**
+         * 如果广告位支持视频广告，强烈建议在调用loadData请求广告前调用setVideoPlayPolicy，有助于提高视频广告的eCPM值 <br/>
+         * 如果广告位仅支持图文广告，则无需调用
+         */
+
+        /**
+         * 设置本次拉取的视频广告，从用户角度看到的视频播放策略<p/>
+         *
+         * "用户角度"特指用户看到的情况，并非SDK是否自动播放，与自动播放策略AutoPlayPolicy的取值并非一一对应 <br/>
+         *
+         * 如自动播放策略为AutoPlayPolicy.WIFI，但此时用户网络为4G环境，在用户看来就是手工播放的
+         */
+        iad.setVideoPlayPolicy(VideoOption.VideoPlayPolicy.MANUAL);
     }
 
     /**
@@ -95,9 +172,10 @@ public class TibiAdInter {
     public void showAdInterCsj(final Activity activity, final String interConfigStr, final String adConstStr,
                                final AdListenerSplashFull adListener) {
         int n = UIUtils.getAdWidth(activity);
+        String posId = AdInit.getSingleAdInit().getIdMapCsj().get(adConstStr);
         // 设置广告参数
         AdSlot adSlot = new AdSlot.Builder()
-                .setCodeId(adConstStr) // 广告位id
+                .setCodeId(posId) // 广告位id
                 .setSupportDeepLink(true)
                 .setAdCount(1) // 请求广告数量为1到3条
                 .setExpressViewAcceptedSize(n, n * 9 / 16) //期望模板广告view的size,单位dp
@@ -226,66 +304,66 @@ public class TibiAdInter {
     public void showAdInterTb(final Activity activity, final String interConfigStr, final String adConstStr,
                               final AdListenerSplashFull adListener) {
         HttpParams httpParams = new HttpParams();
-        TibiAdHttp.getSingleAdHttp().getAdInfo( httpParams, new CallBack<ImageAdEntity>() {
-                    @Override
-                    public void onStart() {
+        TibiAdHttp.getSingleAdHttp().getAdInfo(httpParams, new CallBack<ImageAdEntity>() {
+            @Override
+            public void onStart() {
 
-                    }
+            }
 
-                    @Override
-                    public void onCompleted() {
-                        Log.i("showAdInterTb", "onCompleted =");
-                    }
+            @Override
+            public void onCompleted() {
+                Log.i("showAdInterTb", "onCompleted =");
+            }
 
-                    @Override
-                    public void onError(ApiException e) {
-                        Log.i("showAdInterTb", "onError =" + e.getDisplayMessage());
-                        // 请求替比广告失败，加载第三方广告
-                        showAdInter(activity, interConfigStr, adConstStr, adListener);
-                    }
+            @Override
+            public void onError(ApiException e) {
+                Log.i("showAdInterTb", "onError =" + e.getDisplayMessage());
+                // 请求替比广告失败，加载第三方广告
+                showAdInter(activity, interConfigStr, adConstStr, adListener);
+            }
 
+            @Override
+            public void onSuccess(ImageAdEntity imageAdEntity) {
+                Log.i("showAdInterTb", "result=" + imageAdEntity);
+                imageAdEntity = new ImageAdEntity();
+                // 请求替比广告成功
+                //设置当前广告信息
+                AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
+                // 加入广告
+                View view = LayoutInflater.from(activity).inflate(R.layout.tb_ad_inter, null);
+                ImageView ivAd = view.findViewById(R.id.iv_ad);
+                ImageView ivAdClose = view.findViewById(R.id.iv_ad_close);
+                ivAd.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onSuccess(ImageAdEntity imageAdEntity) {
-                        Log.i("showAdInterTb", "result=" + imageAdEntity);
-                        imageAdEntity = new ImageAdEntity();
-                        // 请求替比广告成功
-                        //设置当前广告信息
-                        AdInit.getSingleAdInit().setImageAdEntity(imageAdEntity);
-                        // 加入广告
-                        View view = LayoutInflater.from(activity).inflate(R.layout.tb_ad_inter, null);
-                        ImageView ivAd = view.findViewById(R.id.iv_ad);
-                        ImageView ivAdClose = view.findViewById(R.id.iv_ad_close);
-                        ivAd.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // 统计点击量
-                                TibiAdHttp.getSingleAdHttp().onAdOperation(activity, adListener);
-                                // 关闭广告框
-                                if (customDialog != null && customDialog.isShowing()) {
-                                    customDialog.dismiss();
-                                }
-                            }
-                        });
-                        ivAdClose.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // 关闭广告框
-                                if (adListener != null) {
-                                    adListener.onAdDismissed();
-                                }
-                                if (customDialog != null && customDialog.isShowing()) {
-                                    customDialog.dismiss();
-                                }
-                            }
-                        });
-                        ImageLoadUtil.loadImage(activity, imageAdEntity.getUrl(), ivAd, adListener);
-                        int n = UIUtils.getAdWidth(activity);
-                        customDialog = new CustomDialog(activity, n * 3 / 4, n, view, R.style.CustomDialog);
-                        customDialog.show();
-                        if (adListener != null) {
-                            adListener.onAdPrepared(AdNameType.TB);
+                    public void onClick(View v) {
+                        // 统计点击量
+                        TibiAdHttp.getSingleAdHttp().onAdOperation(activity, adListener);
+                        // 关闭广告框
+                        if (customDialog != null && customDialog.isShowing()) {
+                            customDialog.dismiss();
                         }
                     }
                 });
+                ivAdClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 关闭广告框
+                        if (adListener != null) {
+                            adListener.onAdDismissed();
+                        }
+                        if (customDialog != null && customDialog.isShowing()) {
+                            customDialog.dismiss();
+                        }
+                    }
+                });
+                ImageLoadUtil.loadImage(activity, imageAdEntity.getUrl(), ivAd, adListener);
+                int n = UIUtils.getAdWidth(activity);
+                customDialog = new CustomDialog(activity, n * 3 / 4, n, view, R.style.CustomDialog);
+                customDialog.show();
+                if (adListener != null) {
+                    adListener.onAdPrepared(AdNameType.TB);
+                }
+            }
+        });
     }
 }

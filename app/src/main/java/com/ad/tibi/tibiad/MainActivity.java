@@ -31,13 +31,13 @@ public class MainActivity extends Activity {
         TibiAdBanner.getSingleAdBanner()
                 .showAdBanner(this,
                         "tb:1",
-                AdInit.getSingleAdInit().getIdMapCsj().get(AdConst.AD_WEBVIEW_BANNER),
-                        flBanner,160,
+                        AdConst.AD_WEBVIEW_BANNER,
+                        flBanner, 160,
                         adListenerSplashFull);
-//        TibiAdInter.getSingleAdInter().showAdInter(this,
-//                "tb:1,csj:0",
-//                AdInit.getSingleAdInit().getIdMapCsj().get(AdConst.AD_INTER),
-//                adListenerSplashFull);
+        TibiAdInter.getSingleAdInter().showAdInter(this,
+                "tb:0,gdt:1",
+                AdConst.AD_INTER,
+                adListenerSplashFull);
 //        TibiAdImageText.getSingleAdImageText().showAdImageTextTb(this, flAdIamgeText, adListenerSplashFull);
     }
 
