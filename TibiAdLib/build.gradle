@@ -47,17 +47,17 @@ dependencies {
 //    api(name: 'open_ad_sdk', ext: 'aar')
 }
 //发布到远程仓库
-apply plugin: 'com.novoda.bintray-release'
-tasks.withType(Javadoc).all {
-    enabled = false
-}
-publish {
-    userOrg = 'tibi' //bintray账户下某个组织id
-    repoName = 'maven' //远程仓库名
-    groupId = 'com.ad.tibi.lib' //maven仓库下库的包名，一般为模块包名
-    artifactId = 'ad' //项目名称
-    publishVersion = '1.0.0' //版本号
-    desc = 'custom test for android' //项目介绍，可以不写
-    website = '' //项目主页，可以不写
-    licences = ['Apache-2.0']
-}
+//apply plugin: 'com.novoda.bintray-release'
+//tasks.withType(Javadoc).all {
+//    enabled = false
+//}
+//publish {
+//    userOrg = 'tibi' //bintray账户下某个组织id
+//    repoName = 'maven' //远程仓库名
+//    groupId = 'com.ad.tibi.lib' //maven仓库下库的包名，一般为模块包名
+//    artifactId = 'ad' //项目名称
+//    publishVersion = '1.0.0' //版本号
+//    desc = 'custom test for android' //项目介绍，可以不写
+//    website = '' //项目主页，可以不写
+//    licences = ['Apache-2.0']
+//}
