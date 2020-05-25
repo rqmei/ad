@@ -52,7 +52,7 @@ tasks.withType(Javadoc).all {
     enabled = false
 }
 publish {
-    userOrg = 'rqmei' //bintray账户下某个组织id
+    userOrg = 'tibi' //bintray账户下某个组织id
     repoName = 'maven' //远程仓库名
     groupId = 'com.ad.tibi.lib' //maven仓库下库的包名，一般为模块包名
     artifactId = 'ad' //项目名称
