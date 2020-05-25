@@ -127,7 +127,6 @@ public class TibiAdHttp extends ApiBase {
                         // 点击广告 跳转
                         if (adListener != null) {
                             adListener.onAdClick(AdNameType.TB);
-                            adListener.onAdDismissed();
                         }
                     }
 

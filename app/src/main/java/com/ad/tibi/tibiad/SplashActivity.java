@@ -92,7 +92,7 @@ public class SplashActivity extends Activity {
     }
 
     private void requestAd() {
-        String splashConfigAd = "baidu:0,gdt:1,csj:0";
+        String splashConfigAd = "gdt:0,csj:1";
         TibiAdSplash.getSingleAdSplash().showAdFull(
                 this,
                 splashConfigAd,
